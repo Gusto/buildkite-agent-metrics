@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,13 +9,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/buildkite/buildkite-metrics/backend"
 	"github.com/buildkite/buildkite-metrics/collector"
 	"github.com/buildkite/buildkite-metrics/version"
-	"github.com/eawsy/aws-lambda-go/service/lambda/runtime"
 )
 
-func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
+func handle(context.Context) (interface{}, error) {
 	token := os.Getenv("BUILDKITE_AGENT_TOKEN")
 	backendOpt := os.Getenv("BUILDKITE_BACKEND")
 	queue := os.Getenv("BUILDKITE_QUEUE")
@@ -75,5 +75,5 @@ func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 }
 
 func init() {
-	runtime.HandleFunc(handle)
+	lambda.Start(handle)
 }
